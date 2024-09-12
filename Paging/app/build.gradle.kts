@@ -63,7 +63,7 @@ dependencies {
     implementation(libs.squareup.converter.gson)
     implementation(libs.okhttp.logging.interceptor)
 
-    //glide
+    //coil
     implementation(libs.coil.compose)
 
     //hilt

@@ -3,7 +3,6 @@ package com.moondroid.compose.paging.data.di
 import android.util.Log
 import com.google.gson.GsonBuilder
 import com.moondroid.compose.paging.data.api.GithubApiService
-import com.moondroid.compose.paging.data.api.MovieApiService
 import com.moondroid.compose.paging.data.datasource.RemoteDataSource
 import com.moondroid.compose.paging.data.datasource.RemoteDataSourceImpl
 import dagger.Binds
@@ -19,6 +18,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.URLDecoder
 import javax.inject.Singleton
 
 @Module
@@ -42,7 +42,7 @@ object NetworkModule {
             val log = try {
                 JSONObject(it).toString()
             } catch (e: JSONException) {
-                //URLDecoder.decode(it, "UTF-8")
+                URLDecoder.decode(it, "UTF-8")
                 it
             }
             Log.d("HttpClient", log)
@@ -72,21 +72,6 @@ object NetworkModule {
             .build()
         return retrofit.create(GithubApiService::class.java)
     }
-
-    @Provides
-    @Singleton
-    fun provideMovieApiService(
-        okHttpClient: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory,
-    ): MovieApiService {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp/")
-            .addConverterFactory(gsonConverterFactory)
-            .client(okHttpClient)
-            .build()
-        return retrofit.create(MovieApiService::class.java)
-    }
-
 }
 
 @Module
