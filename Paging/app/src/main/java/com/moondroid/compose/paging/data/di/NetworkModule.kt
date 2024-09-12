@@ -54,46 +54,38 @@ object NetworkModule {
             .build()
     }
 
-
-    @Singleton
     @Provides
-    fun provideRetrofitInstance(
+    @Singleton
+    fun provideConverterFactory(): GsonConverterFactory =
+        GsonConverterFactory.create(GsonBuilder().setLenient().create())
+
+    @Provides
+    @Singleton
+    fun provideGithubApiService(
         okHttpClient: OkHttpClient,
         gsonConverterFactory: GsonConverterFactory,
-    ): Retrofit {
-        return Retrofit.Builder()
+    ): GithubApiService {
+        val retrofit = Retrofit.Builder()
             .baseUrl("https://api.github.com/")
             .addConverterFactory(gsonConverterFactory)
             .client(okHttpClient)
             .build()
+        return retrofit.create(GithubApiService::class.java)
     }
 
-    @Singleton
     @Provides
-    fun provideMovieRetrofitInstance(
+    @Singleton
+    fun provideMovieApiService(
         okHttpClient: OkHttpClient,
         gsonConverterFactory: GsonConverterFactory,
-    ): Retrofit {
-        return Retrofit.Builder()
+    ): MovieApiService {
+        val retrofit = Retrofit.Builder()
             .baseUrl("http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp/")
             .addConverterFactory(gsonConverterFactory)
             .client(okHttpClient)
             .build()
+        return retrofit.create(MovieApiService::class.java)
     }
-
-    @Provides
-    @Singleton
-    fun provideConverterFactory(): GsonConverterFactory =
-        GsonConverterFactory.create(GsonBuilder().create())
-
-
-    @Provides
-    @Singleton
-    fun provideGithubApiService(retrofit: Retrofit): GithubApiService = retrofit.create(GithubApiService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideMovieApiService(retrofit: Retrofit): MovieApiService = retrofit.create(MovieApiService::class.java)
 
 }
 

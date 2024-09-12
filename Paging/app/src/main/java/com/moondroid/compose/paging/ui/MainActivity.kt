@@ -10,9 +10,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.moondroid.compose.paging.common.navigation.MyDestination
-import com.moondroid.compose.paging.common.navigation.MyNavigationAction
-import com.moondroid.compose.paging.common.navigation.MyNavGraph
+import com.moondroid.compose.paging.ui.navigation.MyDestination
+import com.moondroid.compose.paging.ui.navigation.MyNavigationAction
+import com.moondroid.compose.paging.ui.navigation.MyNavGraph
 import com.moondroid.compose.paging.ui.theme.PagingTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,7 +37,7 @@ fun MyApp() {
         MyNavGraph(
             navController = navController,
             navigationAction = navigationAction,
-            startDestination = MyDestination.SPLASH_ROUTE
+            startDestination = MyDestination.USER_LIST
         )
     }
 }

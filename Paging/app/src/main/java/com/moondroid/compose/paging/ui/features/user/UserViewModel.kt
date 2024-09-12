@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.moondroid.compose.paging.domain.model.User
-import com.moondroid.compose.paging.domain.usecase.UserLIstUseCase
+import com.moondroid.compose.paging.domain.usecase.UserListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -21,13 +21,16 @@ sealed interface UserUIState {
 }
 
 @HiltViewModel
-class UserViewModel @Inject constructor(private val userLIstUseCase: UserLIstUseCase) : ViewModel() {
+class UserViewModel @Inject constructor(
+    private val userLIstUseCase: UserListUseCase,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UserUIState>(UserUIState.Loading)
     val uiState: StateFlow<UserUIState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
+            //Loading 상태를 확인하기 위한 delay
             delay(1000)
             val data = userLIstUseCase().cachedIn(viewModelScope)
             _uiState.emit(UserUIState.List(data))

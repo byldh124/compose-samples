@@ -30,7 +30,7 @@ import com.moondroid.compose.paging.ui.features.user.UserViewModel
 fun UserListScreen(viewModel: UserViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    when (state) {
+    when (val uiState = state) {
         UserUIState.Loading -> Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -39,7 +39,7 @@ fun UserListScreen(viewModel: UserViewModel = hiltViewModel()) {
         }
 
         is UserUIState.List -> {
-            val users = (state as UserUIState.List).data.collectAsLazyPagingItems()
+            val users = uiState.data.collectAsLazyPagingItems()
             LazyColumn {
                 items(users.itemCount) { idx ->
                     users[idx]?.let { user -> UsersListItem(user = user, onItemClick = {}) }
