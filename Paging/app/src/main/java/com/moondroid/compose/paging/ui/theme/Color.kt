@@ -1,4 +1,4 @@
-package com.moondroid.compose.paging.presentation.theme
+package com.moondroid.compose.paging.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

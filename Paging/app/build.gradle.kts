@@ -61,14 +61,21 @@ dependencies {
     //Retrofit
     implementation(libs.squareup.retrofit)
     implementation(libs.squareup.converter.gson)
+    implementation(libs.okhttp.logging.interceptor)
 
     //glide
-    implementation(libs.glide.compose)
+    implementation(libs.coil.compose)
 
     //hilt
     implementation(libs.dagger.hilt.android)
     ksp(libs.dagger.hilt.compiler)
 
+    //navigation
+    implementation(libs.navigation.compose)
+
+    //paging3
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
 
     //TEST
     testImplementation(libs.junit)

@@ -1,6 +1,5 @@
-package com.moondroid.compose.paging.presentation.theme
+package com.moondroid.compose.paging.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
