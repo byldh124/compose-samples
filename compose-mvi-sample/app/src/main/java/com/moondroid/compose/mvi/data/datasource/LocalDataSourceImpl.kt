@@ -7,12 +7,12 @@ import javax.inject.Inject
 class LocalDataSourceImpl @Inject constructor(
     private val noteDao: NoteDao,
 ) : LocalDataSource {
-    override suspend fun insertNote(note: NoteEntity): Int {
-        return noteDao.insertNote(note).toInt()
+    override suspend fun insertNote(note: NoteEntity) {
+        noteDao.insertNote(note)
     }
 
-    override suspend fun deleteNote(note: NoteEntity): Int {
-        return noteDao.delete(note)
+    override suspend fun deleteNote(note: NoteEntity) {
+        noteDao.delete(note)
     }
 
     override suspend fun getNotes(): List<NoteEntity> {

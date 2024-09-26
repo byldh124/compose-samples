@@ -15,8 +15,8 @@ import javax.inject.Inject
 class NoteRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
 ) : NoteRepository {
-    override suspend fun insertNote(note: Note): Flow<Either<Int>> {
-        return  flow<Either<Int>> {
+    override suspend fun insertNote(note: Note): Flow<Either<Unit>> {
+        return flow<Either<Unit>> {
             runCatching {
                 emit(Either.Success(localDataSource.insertNote(note.toNoteEntity())))
             }.onFailure {
@@ -25,8 +25,8 @@ class NoteRepositoryImpl @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    override suspend fun deleteNote(note: Note): Flow<Either<Int>> {
-        return flow<Either<Int>> {
+    override suspend fun deleteNote(note: Note): Flow<Either<Unit>> {
+        return flow<Either<Unit>> {
             runCatching {
                 emit(Either.Success(localDataSource.deleteNote(note.toNoteEntity())))
             }.onFailure {
@@ -39,11 +39,7 @@ class NoteRepositoryImpl @Inject constructor(
         return flow<Either<List<Note>>> {
             runCatching {
                 localDataSource.getNotes().run {
-                    if (isNotEmpty()) {
-                        emit(Either.Success(this.map { it.toNote() }))
-                    } else {
-                        emit(Either.Error(Exception("데이터가 존재하지 않습니다.")))
-                    }
+                    emit(Either.Success(this.map { it.toNote() }))
                 }
             }.onFailure {
                 emit(Either.Error(it))
@@ -54,10 +50,11 @@ class NoteRepositoryImpl @Inject constructor(
     override suspend fun getNote(id: Int): Flow<Either<Note>> {
         return flow<Either<Note>> {
             runCatching {
-                localDataSource.getNote(id)?.run {
-                    emit(Either.Success(this.toNote()))
-                } ?: run {
-                    emit(Either.Error(Exception("데이터가 존재하지 않습니다.")))
+                val noteEntity = localDataSource.getNote(id)
+                if (noteEntity != null) {
+                    emit(Either.Success(noteEntity.toNote()))
+                } else {
+                    emit(Either.Error(Exception("해당 아이디의 노트가 존재하지 않습니다.")))
                 }
             }.onFailure {
                 emit(Either.Error(it))
@@ -65,7 +62,7 @@ class NoteRepositoryImpl @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    override suspend fun update(note: Note): Flow<Either<Int>> {
+    override suspend fun update(note: Note): Flow<Either<Unit>> {
         return flow {
             runCatching {
                 localDataSource.update(note.toNoteEntity())

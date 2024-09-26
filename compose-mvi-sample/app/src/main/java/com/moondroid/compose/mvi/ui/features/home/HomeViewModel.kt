@@ -8,9 +8,13 @@ import com.moondroid.compose.mvi.domain.model.response.onSuccess
 import com.moondroid.compose.mvi.domain.usecase.DeleteUseCase
 import com.moondroid.compose.mvi.domain.usecase.GetNotesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,14 +22,26 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getNotesUseCase: GetNotesUseCase,
     private val deleteUseCase: DeleteUseCase,
-) : ViewModel(){
-    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
-    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+) : ViewModel() {
+    val intent = Channel<HomeContract.Intent>(Channel.UNLIMITED)
+    private val _effect = Channel<HomeContract.Effect>()
+    val effect: Flow<HomeContract.Effect> = _effect.consumeAsFlow()
 
-    fun handleIntent(intent: HomeIntent) {
-        when (intent) {
-            is HomeIntent.Delete -> deleteNote(intent.note)
-            HomeIntent.FetchNotes -> fetchNotes()
+    private val _uiState = MutableStateFlow<HomeContract.State>(HomeContract.State.Loading)
+    val uiState: StateFlow<HomeContract.State> = _uiState.asStateFlow()
+
+    init {
+        handleIntent()
+    }
+
+    private fun handleIntent() {
+        viewModelScope.launch {
+            intent.consumeAsFlow().collect {
+                when (it) {
+                    HomeContract.Intent.FetchNotes -> fetchNotes()
+                    is HomeContract.Intent.Delete -> deleteNote(it.note)
+                }
+            }
         }
     }
 
@@ -33,9 +49,14 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             getNotesUseCase().collect { result ->
                 result.onSuccess {
-                    _uiState.emit(HomeUiState.Notes(it))
+                    if (it.isNotEmpty()) {
+                        _uiState.emit(HomeContract.State.Notes(it))
+                    } else {
+                        _uiState.emit(HomeContract.State.Empty)
+                    }
                 }.onError {
-                    _uiState.emit(HomeUiState.Error(it.message ?: it.javaClass.simpleName))
+                    _effect.send(HomeContract.Effect.Toast(it.message ?: it.javaClass.simpleName))
+                    _uiState.emit(HomeContract.State.Error(it.message ?: it.javaClass.simpleName))
                 }
             }
         }
@@ -45,9 +66,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             deleteUseCase(note).collect { result ->
                 result.onSuccess {
+                    _effect.send(HomeContract.Effect.Toast("삭제 실패"))
                     fetchNotes()
                 }.onError {
-                    //TODO SideEffect
+                    _effect.send(HomeContract.Effect.Toast("삭제 실패"))
                 }
             }
         }

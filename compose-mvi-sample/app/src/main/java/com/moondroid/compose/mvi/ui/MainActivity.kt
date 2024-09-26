@@ -10,8 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.moondroid.compose.mvi.ui.navigation.MyDestination
+import com.moondroid.compose.mvi.ui.navigation.MyNavGraph
+import com.moondroid.compose.mvi.ui.navigation.MyNavigationAction
 import com.moondroid.compose.mvi.ui.theme.MviTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,10 +27,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MviTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(modifier = Modifier.padding(innerPadding)) {
-                    }
+                val navController = rememberNavController()
+                val navigationAction = remember(navController) {
+                    MyNavigationAction(navController = navController)
                 }
+                MyNavGraph(
+                    navController = navController,
+                    navigationAction = navigationAction,
+                    startDestination = MyDestination.HOME_ROUTE
+                )
             }
         }
     }
