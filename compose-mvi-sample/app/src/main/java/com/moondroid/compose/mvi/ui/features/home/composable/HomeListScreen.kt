@@ -26,8 +26,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moondroid.compose.mvi.ui.features.home.HomeContract
 import com.moondroid.compose.mvi.ui.features.home.HomeViewModel
 import com.moondroid.compose.mvi.ui.navigation.MyNavigationAction
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
@@ -37,9 +35,7 @@ fun HomeListScreen(navigationAction: MyNavigationAction, viewModel: HomeViewMode
     val lifecycleScope = rememberCoroutineScope()
 
     LaunchedEffect(viewModel) {
-        CoroutineScope(Dispatchers.Main).launch {
-            viewModel.intent.send(HomeContract.Intent.FetchNotes)
-        }
+        viewModel.intent.send(HomeContract.Intent.FetchNotes)
     }
 
     LaunchedEffect(viewModel.effect) {
@@ -49,6 +45,7 @@ fun HomeListScreen(navigationAction: MyNavigationAction, viewModel: HomeViewMode
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     Scaffold(
         topBar = {
@@ -99,9 +96,9 @@ fun HomeListScreen(navigationAction: MyNavigationAction, viewModel: HomeViewMode
                         NoteItem(state.data[idx], {
                             navigationAction.toNote(it.id)
                         }, {
-                          lifecycleScope.launch {
-                              viewModel.intent.send(HomeContract.Intent.Delete(it))
-                          }
+                            lifecycleScope.launch {
+                                viewModel.intent.send(HomeContract.Intent.Delete(it))
+                            }
                         })
                     }
                 }

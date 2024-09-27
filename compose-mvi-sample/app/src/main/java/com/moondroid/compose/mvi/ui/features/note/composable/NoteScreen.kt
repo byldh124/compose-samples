@@ -63,6 +63,9 @@ fun NoteScreen(
 
     LaunchedEffect(viewModel) {
         viewModel.intent.send(NoteContract.Intent.LoadNote(noteId.toInt()))
+    }
+
+    LaunchedEffect(viewModel.effect) {
         viewModel.effect.collect {
             when (it) {
                 NoteContract.Effect.Done -> {

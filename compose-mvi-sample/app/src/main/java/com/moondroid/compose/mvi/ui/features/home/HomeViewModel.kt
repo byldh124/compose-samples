@@ -51,7 +51,6 @@ class HomeViewModel @Inject constructor(
             getNotesUseCase().collect { result ->
                 result.onSuccess {
                     if (it.isNotEmpty()) {
-                        Log.e("TAG", "notes : ${it[0]}")
                         _uiState.emit(HomeContract.State.Notes(it))
                     } else {
                         _uiState.emit(HomeContract.State.Empty)

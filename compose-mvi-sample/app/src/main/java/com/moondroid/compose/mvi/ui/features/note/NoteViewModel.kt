@@ -9,7 +9,9 @@ import com.moondroid.compose.mvi.domain.model.response.onError
 import com.moondroid.compose.mvi.domain.model.response.onSuccess
 import com.moondroid.compose.mvi.domain.usecase.GetNotesUseCase
 import com.moondroid.compose.mvi.domain.usecase.SaveUseCase
-import com.moondroid.compose.mvi.ui.features.note.NoteContract.*
+import com.moondroid.compose.mvi.ui.features.note.NoteContract.Effect
+import com.moondroid.compose.mvi.ui.features.note.NoteContract.Intent
+import com.moondroid.compose.mvi.ui.features.note.NoteContract.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -41,7 +43,7 @@ class NoteViewModel @Inject constructor(
 
     private fun handleIntent() {
         viewModelScope.launch {
-            intent.consumeAsFlow().collect { intent ->
+            intent.receiveAsFlow().collect { intent ->
                 when (intent) {
                     is Intent.ChangeBoxColor -> onNoteBoxColorChanged(intent.boxColor)
                     is Intent.ChangeContent -> onNoteContentChanged(intent.description)
@@ -98,7 +100,6 @@ class NoteViewModel @Inject constructor(
             val updateNote = state.note.copy(date = System.currentTimeMillis())
             viewModelScope.launch {
                 saveUseCase(updateNote).collect { result ->
-                    Log.e("TAG", "save collect : $result")
                     result.onSuccess {
                         _effect.send(Effect.Done)
                     }.onError {
