@@ -15,10 +15,28 @@ import javax.inject.Inject
 class NoteRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
 ) : NoteRepository {
-    override suspend fun insertNote(note: Note): Flow<Either<Unit>> {
+    override suspend fun save(note: Note): Flow<Either<Unit>> {
+        return if (note.id == 0) {
+            insert(note)
+        } else {
+            update(note)
+        }
+    }
+
+    private suspend fun insert(note: Note): Flow<Either<Unit>> {
         return flow<Either<Unit>> {
             runCatching {
                 emit(Either.Success(localDataSource.insertNote(note.toNoteEntity())))
+            }.onFailure {
+                emit(Either.Error(it))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    private suspend fun update(note: Note): Flow<Either<Unit>> {
+        return flow<Either<Unit>> {
+            runCatching {
+                emit(Either.Success(localDataSource.update(note.toNoteEntity())))
             }.onFailure {
                 emit(Either.Error(it))
             }
@@ -60,13 +78,5 @@ class NoteRepositoryImpl @Inject constructor(
                 emit(Either.Error(it))
             }
         }.flowOn(Dispatchers.IO)
-    }
-
-    override suspend fun update(note: Note): Flow<Either<Unit>> {
-        return flow {
-            runCatching {
-                localDataSource.update(note.toNoteEntity())
-            }
-        }
     }
 }

@@ -1,5 +1,6 @@
 package com.moondroid.compose.mvi.ui.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -8,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.moondroid.compose.mvi.ui.features.home.HomeViewModel
 import com.moondroid.compose.mvi.ui.features.home.composable.HomeListScreen
+import com.moondroid.compose.mvi.ui.features.note.NoteViewModel
 import com.moondroid.compose.mvi.ui.features.note.composable.NoteScreen
 
 object ArgumentKey {
@@ -38,9 +40,8 @@ fun MyNavGraph(
             //val noteViewModel = hiltViewModel<NoteViewModel>()
 
             NoteScreen(
-                /*navController = navController,
-                //noteViewModel = noteViewModel
-                noteId = backStackEntry.arguments?.getString(ArgumentKey.NOTE_ID) ?: ""*/
+                navController = navController,
+                noteId = backStackEntry.arguments?.getString(ArgumentKey.NOTE_ID) ?: "-1"
             )
         }
     }

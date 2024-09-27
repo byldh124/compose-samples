@@ -16,8 +16,8 @@ interface NoteDao {
     @Query("SELECT * FROM MyNote")
     suspend fun getNoteAll(): List<NoteEntity>
 
-    @Query("UPDATE MyNote SET description=:description, boxColor=:boxColor WHERE id = :id")
-    suspend fun update(id: Int, description: String, boxColor: BoxColor): Int
+    @Query("UPDATE MyNote SET description=:description, boxColor=:boxColor, date=:date WHERE id = :id")
+    suspend fun update(id: Int, description: String, boxColor: BoxColor, date: Long): Int
 
     @Query("SELECT * FROM MyNote WHERE id = :id")
     suspend fun getNote(id: Int): NoteEntity

@@ -1,5 +1,6 @@
 package com.moondroid.compose.mvi.ui.features.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moondroid.compose.mvi.domain.model.Note
@@ -25,7 +26,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     val intent = Channel<HomeContract.Intent>(Channel.UNLIMITED)
     private val _effect = Channel<HomeContract.Effect>()
-    val effect: Flow<HomeContract.Effect> = _effect.consumeAsFlow()
+    val effect: Flow<HomeContract.Effect> = _effect.receiveAsFlow()
 
     private val _uiState = MutableStateFlow<HomeContract.State>(HomeContract.State.Loading)
     val uiState: StateFlow<HomeContract.State> = _uiState.asStateFlow()
@@ -36,7 +37,7 @@ class HomeViewModel @Inject constructor(
 
     private fun handleIntent() {
         viewModelScope.launch {
-            intent.consumeAsFlow().collect {
+            intent.receiveAsFlow().collect {
                 when (it) {
                     HomeContract.Intent.FetchNotes -> fetchNotes()
                     is HomeContract.Intent.Delete -> deleteNote(it.note)
@@ -50,6 +51,7 @@ class HomeViewModel @Inject constructor(
             getNotesUseCase().collect { result ->
                 result.onSuccess {
                     if (it.isNotEmpty()) {
+                        Log.e("TAG", "notes : ${it[0]}")
                         _uiState.emit(HomeContract.State.Notes(it))
                     } else {
                         _uiState.emit(HomeContract.State.Empty)

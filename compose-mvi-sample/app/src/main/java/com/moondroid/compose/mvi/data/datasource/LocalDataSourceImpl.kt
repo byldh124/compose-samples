@@ -23,7 +23,7 @@ class LocalDataSourceImpl @Inject constructor(
         return noteDao.getNote(id)
     }
 
-    override suspend fun update(note: NoteEntity): Int {
-        return noteDao.update(note.id, note.description, note.boxColor)
+    override suspend fun update(note: NoteEntity) {
+        noteDao.update(note.id, note.description, note.boxColor, note.date)
     }
 }

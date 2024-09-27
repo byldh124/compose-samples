@@ -7,5 +7,5 @@ interface LocalDataSource {
     suspend fun deleteNote(note: NoteEntity)
     suspend fun getNotes(): List<NoteEntity>
     suspend fun getNote(id: Int): NoteEntity?
-    suspend fun update(note: NoteEntity): Int
+    suspend fun update(note: NoteEntity)
 }
