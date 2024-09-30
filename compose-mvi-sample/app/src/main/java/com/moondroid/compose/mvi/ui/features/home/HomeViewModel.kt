@@ -67,7 +67,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             deleteUseCase(note).collect { result ->
                 result.onSuccess {
-                    _effect.send(HomeContract.Effect.Toast("삭제 실패"))
+                    _effect.send(HomeContract.Effect.Toast("삭제 완료"))
                     fetchNotes()
                 }.onError {
                     _effect.send(HomeContract.Effect.Toast("삭제 실패"))
