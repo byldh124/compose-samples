@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -29,7 +27,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,6 +45,9 @@ import com.moondroid.compose.mvi.common.BoxColor
 import com.moondroid.compose.mvi.domain.model.Note
 import com.moondroid.compose.mvi.ui.features.note.NoteContract
 import com.moondroid.compose.mvi.ui.features.note.NoteViewModel
+import com.moondroid.compose.mvi.ui.features.note.onError
+import com.moondroid.compose.mvi.ui.features.note.onLoading
+import com.moondroid.compose.mvi.ui.features.note.onSuccess
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -84,7 +84,7 @@ fun NoteScreen(
                 navigationIcon = {
                     if (navController.previousBackStackEntry != null) {
                         IconButton(
-                            onClick = {navController.navigateUp()},
+                            onClick = { navController.navigateUp() },
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
@@ -92,12 +92,44 @@ fun NoteScreen(
                             )
                         }
                     }
-            })
+                })
         },
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            when (val state = uiState) {
+
+            uiState.onLoading {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }.onSuccess {
+                NoteWidget(
+                    lifecycleScope, viewModel,
+                    note = it,
+                    onValueChange = { s ->
+                        lifecycleScope.launch {
+                            viewModel.intent.send(NoteContract.Intent.ChangeContent(s))
+                        }
+                    },
+                    onBoxSelect = { boxColor ->
+                        lifecycleScope.launch {
+                            viewModel.intent.send(NoteContract.Intent.ChangeBoxColor(boxColor))
+                        }
+                    },
+                )
+            }.onError {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = it)
+                }
+            }
+
+            /*when (val state = uiState) {
                 is NoteContract.State.Error -> Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -126,7 +158,7 @@ fun NoteScreen(
                         }
                     },
                 )
-            }
+            }*/
         }
     }
 }

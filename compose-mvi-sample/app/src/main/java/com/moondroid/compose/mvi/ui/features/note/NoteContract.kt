@@ -21,3 +21,18 @@ class NoteContract {
         data object Done : Effect
     }
 }
+
+inline fun NoteContract.State.onLoading(action: () -> Unit) : NoteContract.State {
+    if (this is NoteContract.State.Loading) action()
+    return this
+}
+
+inline fun NoteContract.State.onSuccess(action: (Note) -> Unit) : NoteContract.State {
+    if (this is NoteContract.State.Success) action(note)
+    return this
+}
+
+inline fun NoteContract.State.onError(action: (String) -> Unit) : NoteContract.State {
+    if (this is NoteContract.State.Error) action(message)
+    return this
+}
