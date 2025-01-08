@@ -1,4 +1,4 @@
-package com.mrhi.myapplication.ui.theme
+package com.moondroid.composemap.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

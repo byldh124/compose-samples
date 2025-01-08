@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.mrhi.myapplication"
+    namespace = "com.moondroid.composemap"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.mrhi.myapplication"
+        applicationId = "com.moondroid.composemap"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

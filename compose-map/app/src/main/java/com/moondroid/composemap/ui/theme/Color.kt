@@ -1,4 +1,4 @@
-package com.mrhi.myapplication.ui.theme
+package com.moondroid.composemap.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

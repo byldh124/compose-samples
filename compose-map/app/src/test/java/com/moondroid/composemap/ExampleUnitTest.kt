@@ -1,4 +1,4 @@
-package com.mrhi.myapplication
+package com.moondroid.composemap
 
 import org.junit.Test
 
