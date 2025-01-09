@@ -9,12 +9,12 @@
    - com.kakao.maps.open:android (카카오 맵)
   
 3. 사용법
-   - local.properites
-     google.api.key=${googlea api key}
-     naver.client.id=${naver client id}
-     kakao.client.id=${kakao client id}
+   - local.properites 파일 내부에 api key 등록 </br>
+     google.api.key=${googlea api key} </br>
+     naver.client.id=${naver client id} </br>
+     kakao.client.id=${kakao client id} </br>
 
-   ex) 랜덤으로 쓴거라 실제로 이렇게 기입해도 동작되진 않습니다.
-     google.api.key=A3aisdfij2Mejidoi
-     naver.client.id=ckemij58jd
-     kakao.client.id=f1381923859fjeiaojsd2445678
+   ex) 랜덤으로 쓴거라 이렇게 기입하면 동작되진 않습니다. </br>
+     google.api.key=A3aisdfij2Mejidoi </br>
+     naver.client.id=ckemij58jd </br>
+     kakao.client.id=f1381923859fjeiaojsd2445678 </br>
