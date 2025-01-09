@@ -10,6 +10,7 @@ plugins {
 val properties = gradleLocalProperties(rootDir, providers)
 val googleApiKey: String = properties.getProperty("google.api.key")
 val naverClientId: String = properties.getProperty("naver.client.id")
+val kakaoNativeAppKey: String = properties.getProperty("kakao.native.app.key")
 
 android {
     namespace = "com.moondroid.composemap"
@@ -26,7 +27,10 @@ android {
 
         manifestPlaceholders["googleApiKey"] = googleApiKey
         manifestPlaceholders["naverClientId"] = naverClientId
+        manifestPlaceholders["kakaoNativeAppKey"] = kakaoNativeAppKey
+
         resValue("string", "naver_client_id", naverClientId)
+        resValue("string", "kakao_native_app_key", kakaoNativeAppKey)
     }
 
     buildTypes {
@@ -74,4 +78,6 @@ dependencies {
 
     implementation(libs.naver.map)
     implementation(libs.naver.location)
+
+    implementation(libs.kakao.map)
 }

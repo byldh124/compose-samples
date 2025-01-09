@@ -42,6 +42,8 @@ naver-map = 'io.github.fornewid:naver-map-compose:1.8.0'
 # versions : https://central.sonatype.com/artifact/io.github.fornewid/naver-map-location/versions
 naver-location = 'io.github.fornewid:naver-map-location:21.0.1'
 
+kakao-map = 'com.kakao.maps.open:android:2.12.8'
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
