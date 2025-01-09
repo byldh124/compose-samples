@@ -9,6 +9,7 @@ plugins {
 
 val properties = gradleLocalProperties(rootDir, providers)
 val googleApiKey: String = properties.getProperty("google.api.key")
+val naverClientId: String = properties.getProperty("naver.client.id")
 
 android {
     namespace = "com.moondroid.composemap"
@@ -24,6 +25,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders["googleApiKey"] = googleApiKey
+        manifestPlaceholders["naverClientId"] = naverClientId
+        resValue("string", "naver_client_id", naverClientId)
     }
 
     buildTypes {
@@ -68,4 +71,7 @@ dependencies {
 
     implementation(libs.google.map)
     implementation(libs.google.location)
+
+    implementation(libs.naver.map)
+    implementation(libs.naver.location)
 }

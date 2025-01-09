@@ -67,8 +67,7 @@ fun GoogleMapScreen() {
         properties = MapProperties(
             isMyLocationEnabled = true
         ),
-
-        )
+    )
 }
 
 private suspend fun CameraPositionState.centerOnLocation(

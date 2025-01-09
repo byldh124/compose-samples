@@ -33,7 +33,14 @@ kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-j
 
 #google map
 google-map = 'com.google.maps.android:maps-compose:4.4.1'
-google-location = "com.google.android.gms:play-services-location:21.3.0"
+# versions : https://mvnrepository.com/artifact/com.google.android.gms/play-services-location
+google-location = "com.google.android.gms:play-services-location:21.0.1"
+
+# link : https://github.com/fornewid/naver-map-compose
+naver-map = 'io.github.fornewid:naver-map-compose:1.8.0'
+# google-play-services-location을 사용한다면 같은 버전은 명명
+# versions : https://central.sonatype.com/artifact/io.github.fornewid/naver-map-location/versions
+naver-location = 'io.github.fornewid:naver-map-location:21.0.1'
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
