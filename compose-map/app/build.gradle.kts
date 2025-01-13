@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.android.kotlin.ksp)
+    alias(libs.plugins.android.hilt)
 }
 
 val properties = gradleLocalProperties(rootDir, providers)
@@ -80,4 +82,9 @@ dependencies {
     implementation(libs.naver.location)
 
     implementation(libs.kakao.map)
+
+    // Hilt dependency injection
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation)
+    ksp(libs.hilt.compiler)
 }
