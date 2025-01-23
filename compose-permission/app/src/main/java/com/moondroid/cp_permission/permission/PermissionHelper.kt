@@ -91,13 +91,18 @@ class PermissionHelper(
 }
 
 @Composable
-fun rememberPermissionHelper(permissionResult:(isGranted: Boolean) -> Unit): PermissionHelper {
+fun rememberPermissionHelper(
+    isAllGranted: Boolean = false,
+    permissionResult: (isGranted: Boolean) -> Unit
+): PermissionHelper {
     val context = LocalContext.current
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-
-            Log.e("TAG", "permissions: $permissions")
-            val isGranted = permissions.any { it.value }
+            val isGranted = if (isAllGranted) {
+                permissions.all { it.value }
+            } else {
+                permissions.any { it.value }
+            }
             permissionResult(isGranted)
         }
     return PermissionHelper(context, launcher, permissionResult)

@@ -18,16 +18,15 @@ fun HomeScreen(
     navigateToMap: () -> Unit,
     navigateToCamera: () -> Unit,
 ) {
-
     val imagePermissionHelper = rememberPermissionHelper {
         if (it) navigateToImageList()
     }
 
-    val locationPermissionHelper = rememberPermissionHelper {
+    val locationPermissionHelper = rememberPermissionHelper(true) {
         if (it) navigateToMap()
     }
 
-    val cameraPermissionHelper = rememberPermissionHelper {
+    val cameraPermissionHelper = rememberPermissionHelper(true) {
         if (it) navigateToCamera()
     }
 
